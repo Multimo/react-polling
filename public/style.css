@@ -1,0 +1,15 @@
+body {
+  padding: 20px;
+}
+.connected {
+  background: green;
+}
+.disconnected {
+  background: red;
+}
+span {
+display: block;
+width: 20px;
+height: 20px;
+border-radius: 10px;
+}
