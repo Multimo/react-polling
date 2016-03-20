@@ -7,9 +7,12 @@ body {
 .disconnected {
   background: red;
 }
-span {
+.status-span span {
 display: block;
 width: 20px;
 height: 20px;
 border-radius: 10px;
+}
+.join-btn {
+  margin: 10px auto;
 }
