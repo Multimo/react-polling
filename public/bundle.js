@@ -57,9 +57,9 @@
 	var App = __webpack_require__(216);
 
 	var Audience = __webpack_require__(269);
-	var Speaker = __webpack_require__(272);
-	var Board = __webpack_require__(274);
-	var Whoops404 = __webpack_require__(275);
+	var Speaker = __webpack_require__(273);
+	var Board = __webpack_require__(277);
+	var Whoops404 = __webpack_require__(278);
 
 	ReactDom.render(React.createElement(
 	    Router,
@@ -24762,7 +24762,9 @@
 	      emit: this.emit,
 	      member: {},
 	      audience: [],
-	      speaker: ''
+	      speaker: '',
+	      questions: [],
+	      currentQuestion: false
 	    };
 	  },
 
@@ -24775,6 +24777,7 @@
 	    this.socket.on('audience', this.updateAudience);
 	    this.socket.on('start', this.start);
 	    this.socket.on('end', this.updateState);
+	    this.socket.on('ask', this.ask);
 	  },
 
 	  emit(eventName, payload) {
@@ -24784,7 +24787,7 @@
 	  connect() {
 	    var member = sessionStorage.member ? JSON.parse(sessionStorage.member) : null;
 
-	    if (member && member.type === 'audience') {
+	    if (member && member.type === 'member') {
 	      this.emit('join', member);
 	    } else if (member && member.type === 'speaker') {
 	      this.emit('start', { name: member.name, title: sessionStorage.title });
@@ -24807,6 +24810,7 @@
 
 	  joined(member) {
 	    sessionStorage.member = JSON.stringify(member);
+
 	    this.setState({ member: member });
 	  },
 
@@ -24819,6 +24823,10 @@
 	      sessionStorage.title = presentation.title;
 	    }
 	    this.setState(presentation);
+	  },
+
+	  ask(question) {
+	    sessionStorage.answer = '', this.setState({ currentQuestion: question });
 	  },
 
 	  render() {
@@ -32525,6 +32533,7 @@
 	var React = __webpack_require__(1);
 	var Display = __webpack_require__(270);
 	var Join = __webpack_require__(271);
+	var Ask = __webpack_require__(272);
 
 	var Audience = React.createClass({
 	  displayName: 'Audience',
@@ -32537,21 +32546,30 @@
 	        Display,
 	        { 'if': this.props.member.name },
 	        React.createElement(
-	          'h2',
-	          null,
-	          'Welcome ',
-	          this.props.member.name
+	          Display,
+	          { 'if': !this.props.currentQuestion },
+	          React.createElement(
+	            'h2',
+	            null,
+	            'Welcome ',
+	            this.props.member.name
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            this.props.audience.length,
+	            ' audience members'
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            'Questions Will Appear Here.'
+	          )
 	        ),
 	        React.createElement(
-	          'p',
-	          null,
-	          this.props.audience.length,
-	          ' audience members'
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'Questions Will Appear Here.'
+	          Display,
+	          { 'if': this.props.currentQuestion },
+	          React.createElement(Ask, { question: this.props.currentQuestion, emit: this.props.emit })
 	        )
 	      ),
 	      React.createElement(
@@ -32645,7 +32663,107 @@
 
 	var React = __webpack_require__(1);
 	var Display = __webpack_require__(270);
-	var JoinSpeaker = __webpack_require__(273);
+
+	var Ask = React.createClass({
+	  displayName: 'Ask',
+
+
+	  getInitialState() {
+	    return {
+	      choice: [],
+	      answer: undefined
+	    };
+	  },
+
+	  componentWillMount() {
+	    this.setUpChoices();
+	  },
+
+	  componentWillReceiveProps() {
+	    this.setUpChoices();
+	  },
+
+	  setUpChoices() {
+	    var choices = Object.keys(this.props.question);
+	    choices.shift();
+	    this.setState({
+	      choices: choices,
+	      answer: sessionStorage.answer
+	    });
+	  },
+
+	  select(choice) {
+	    this.setState({ answer: choice });
+	    sessionStorage.answer = choice;
+	    this.props.emit('answer', {
+	      question: this.props.questions,
+	      choice: choice
+	    });
+	  },
+
+	  addChoiceButton(choice, i) {
+
+	    var buttonTypes = ['primary', 'success', 'warning', 'danger'];
+
+	    return React.createElement(
+	      'button',
+	      { key: i,
+	        onClick: this.select.bind(null, choice),
+	        className: "col-xs-12 col-sm-6 btn btn-" + buttonTypes[i] },
+	      choice,
+	      ': ',
+	      this.props.question[choice]
+	    );
+	  },
+
+	  render() {
+	    return React.createElement(
+	      'div',
+	      { id: 'currentQuestion' },
+	      React.createElement(
+	        Display,
+	        { 'if': this.state.answer },
+	        React.createElement(
+	          'h3',
+	          null,
+	          'You Answered: ',
+	          this.state.answer
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          this.props.question
+	        )
+	      ),
+	      React.createElement(
+	        Display,
+	        { 'if': !this.state.answer },
+	        React.createElement(
+	          'h2',
+	          null,
+	          this.props.question.q
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'row' },
+	          this.state.choices.map(this.addChoiceButton)
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Ask;
+
+/***/ },
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Display = __webpack_require__(270);
+	var JoinSpeaker = __webpack_require__(274);
+	var Attendance = __webpack_require__(275);
+	var Questions = __webpack_require__(276);
 
 	var Speaker = React.createClass({
 	  displayName: 'Speaker',
@@ -32660,16 +32778,8 @@
 	        React.createElement(
 	          Display,
 	          { 'if': this.props.member.name && this.props.member.type === 'speaker' },
-	          React.createElement(
-	            'p',
-	            null,
-	            'Questions'
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            'Attendance'
-	          )
+	          React.createElement(Questions, { questions: this.props.questions, emit: this.props.emit }),
+	          React.createElement(Attendance, { audience: this.props.audience })
 	        ),
 	        React.createElement(
 	          Display,
@@ -32692,7 +32802,7 @@
 	//
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32737,7 +32847,121 @@
 	module.exports = JoinSpeaker;
 
 /***/ },
-/* 274 */
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Attendance = React.createClass({
+	  displayName: "Attendance",
+
+
+	  addMemberRow(member, i) {
+	    return React.createElement(
+	      "tr",
+	      { key: i },
+	      React.createElement(
+	        "td",
+	        null,
+	        member.name
+	      ),
+	      React.createElement(
+	        "td",
+	        null,
+	        member.id
+	      )
+	    );
+	  },
+
+	  render() {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "h2",
+	        null,
+	        "Attendance - ",
+	        this.props.audience.length,
+	        " members"
+	      ),
+	      React.createElement(
+	        "table",
+	        { className: "table table-striped" },
+	        React.createElement(
+	          "thead",
+	          null,
+	          React.createElement(
+	            "tr",
+	            null,
+	            React.createElement(
+	              "th",
+	              null,
+	              "audience Members"
+	            ),
+	            React.createElement(
+	              "th",
+	              null,
+	              "Socket ID"
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          "tbody",
+	          null,
+	          this.props.audience.map(this.addMemberRow)
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = Attendance;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Questions = React.createClass({
+	  displayName: 'Questions',
+
+	  ask(question) {
+	    this.props.emit('ask', question);
+	  },
+
+	  addQuestion(question, i) {
+	    return React.createElement(
+	      'div',
+	      { key: i, className: 'col-xs-12 col-sm-6 col-md-3', onClick: this.ask.bind(null, question) },
+	      React.createElement(
+	        'span',
+	        null,
+	        question.q
+	      )
+	    );
+	  },
+
+	  render() {
+	    return React.createElement(
+	      'div',
+	      { id: 'questions', className: 'row' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Questions'
+	      ),
+	      this.props.questions.map(this.addQuestion)
+	    );
+	  }
+
+	});
+
+	module.exports = Questions;
+
+/***/ },
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32758,7 +32982,7 @@
 	module.exports = Board;
 
 /***/ },
-/* 275 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

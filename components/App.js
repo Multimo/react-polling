@@ -14,7 +14,9 @@ var App = React.createClass({
       emit: this.emit,
       member: {},
       audience: [],
-      speaker: ''
+      speaker: '',
+      questions: [],
+      currentQuestion: false
     }
   },
 
@@ -27,6 +29,7 @@ var App = React.createClass({
     this.socket.on('audience', this.updateAudience);
     this.socket.on('start', this.start);
     this.socket.on('end', this.updateState);
+    this.socket.on('ask', this.ask);
   },
 
   emit(eventName, payload) {
@@ -36,7 +39,7 @@ var App = React.createClass({
   connect() {
     var member = (sessionStorage.member) ? JSON.parse(sessionStorage.member) : null;
 
-    if (member && member.type === 'audience') {
+    if (member && member.type === 'member') {
       this.emit('join', member)
     } else if (member && member.type === 'speaker') {
       this.emit('start', { name: member. name, title: sessionStorage.title })
@@ -59,6 +62,7 @@ var App = React.createClass({
 
   joined(member) {
     sessionStorage.member = JSON.stringify(member);
+
     this.setState({ member: member });
   },
 
@@ -71,6 +75,11 @@ var App = React.createClass({
       sessionStorage.title = presentation.title;
     }
     this.setState(presentation);
+  },
+
+  ask(question) {
+    sessionStorage.answer = '',
+    this.setState({ currentQuestion: question });
   },
 
 

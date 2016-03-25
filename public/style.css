@@ -16,3 +16,19 @@ border-radius: 10px;
 .join-btn {
   margin: 10px auto;
 }
+
+a {
+  display: inherit;
+}
+#questions div {
+  padding: 15px;
+margin: auto;
+border: 1px solid green;
+margin: 10px;
+  cursor: pointer;
+  transition: all .7s;
+}
+#questions div:hover {
+  background: yellow;
+
+}
