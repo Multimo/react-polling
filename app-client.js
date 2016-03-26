@@ -1,26 +1,20 @@
-var React = require('react');
-var ReactDom = require('react-dom');
+import React from 'react'
+import ReactDom from 'react-dom'
+import App from './components/App'
+import Audience from './components/Audience'
+import Speaker from './components/Speaker'
+import Board from './components/Board'
+import Whoops404 from './components/Whoops404'
+
+import { Router, Route, Link, IndexRoute, NotFoundRoute, browserHistory } from 'react-router'
 
 
-var Router = require('react-router').Router;
-var Route = require('react-router').Route;
-var Link = require('react-router').Link;
-var IndexRoute = require('react-router').IndexRoute;
-var NotFoundRoute = require('react-router').NotFoundRoute;
-// var hashHistory = require('react-router').hashHistory;
 
-var App = require('./components/App');
-
-var Audience = require('./components/Audience');
-var Speaker = require('./components/Speaker');
-var Board = require('./components/Board');
-var Whoops404 = require('./components/Whoops404');
 
 
 ReactDom.render((
-    <Router >
+    <Router history={browserHistory}>
         <Route path="/" component={App}>
-        {/* add the routes here */}
 
         <IndexRoute component={Audience}/>
         <Route path="/speaker" component={Speaker}/>

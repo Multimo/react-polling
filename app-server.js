@@ -57,6 +57,7 @@ io.sockets.on('connection', function(socket) {
     speaker.id = this.id;
     speaker.type = 'speaker';
     title = payload.title;
+    speaker.title = payload.title;
     this.emit('joined', speaker);
     io.sockets.emit('start', { title: title, speaker: speaker.name });
     console.log("Presentation Started: %s by %s with type of %s", speaker.title, speaker.name, speaker.type);
@@ -64,13 +65,14 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('ask', function(question) {
     currentQuestion = question;
-    results = { a:0, b:0, c:0 }
+    results = { a:0, b:0, c:0 };
     io.sockets.emit('ask', currentQuestion);
     console.log('Question asked: %s', question.q);
   });
 
   socket.on('answer', function(payload) {
     results[payload.choice]++;
+    io.sockets.emit('results', results);
     console.log('Answer: %s - %j', payload.choice, results);
   });
 
@@ -79,7 +81,8 @@ io.sockets.on('connection', function(socket) {
     audience: audience,
     speaker: speaker.name,
     currentQuestion: currentQuestion,
-    questions: questions
+    questions: questions,
+    results: results
   });
 
   connections.push(socket);

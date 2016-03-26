@@ -1,5 +1,5 @@
 var React = require('react');
-var Display = require('./Display')
+var Display = require('./Display');
 
 var Ask = React.createClass({
 
@@ -29,6 +29,7 @@ var Ask = React.createClass({
 
   select(choice) {
     this.setState({ answer: choice });
+    console.log(this.props.question);
     sessionStorage.answer = choice;
     this.props.emit('answer', {
       question: this.props.questions,
@@ -55,7 +56,7 @@ var Ask = React.createClass({
 
           <Display if={this.state.answer}>
             <h3>You Answered: {this.state.answer}</h3>
-            <p>{this.props.question[this.state.answers]}</p>
+            <p>{this.props.question[this.state.answer]}</p>
           </Display>
 
           <Display if={!this.state.answer}>
