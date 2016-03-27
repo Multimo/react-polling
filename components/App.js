@@ -44,7 +44,7 @@ var App = React.createClass({
     if (member && member.type === 'member') {
       this.emit('join', member)
     } else if (member && member.type === 'speaker') {
-      this.emit('start', { name: member. name, title: sessionStorage.title })
+      this.emit('start', { name: member.name, title: sessionStorage.title })
     }
 
     this.setState({ status: 'connected' });
