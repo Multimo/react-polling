@@ -1,8 +1,11 @@
 import React from 'react'
 import Display from './parts/Display'
+
 import JoinSpeaker from './parts/JoinSpeaker'
 import Attendance from './parts/Attendance'
 import Questions from './parts/Questions'
+import AddLinks from './parts/AddLinks'
+import ShowLinks from './parts/ShowLinks'
 
 class Speaker extends React.Component {
   render() {
@@ -13,6 +16,7 @@ class Speaker extends React.Component {
 
           <Display if={this.props.member.name && this.props.member.type === 'speaker'}>
             <Questions questions={this.props.questions} emit={this.props.emit} />
+          
             <Attendance audience={this.props.audience} />
           </Display>
 
@@ -21,6 +25,10 @@ class Speaker extends React.Component {
             <JoinSpeaker emit={this.props.emit} />
           </Display>
 
+        </Display>
+        <AddLinks emit={this.props.emit} />
+        <Display if={this.props.websiteLinks}>
+        <ShowLinks sites={this.props.websiteLinks} />
         </Display>
       </div>
     );

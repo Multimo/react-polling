@@ -17,12 +17,15 @@ var App = React.createClass({
       speaker: '',
       questions: [],
       currentQuestion: false,
-      results: {}
+      results: {},
+      currentSite: false,
+      voteResults: {},
+      websiteLinks: []
     }
   },
 
   componentWillMount() {
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://react-polling-multimo.c9users.io:8081/');
     this.socket.on('connect', this.connect);
     this.socket.on('disconnect', this.disconnect);
     this.socket.on('welcome', this.updateState);
@@ -31,6 +34,8 @@ var App = React.createClass({
     this.socket.on('start', this.start);
     this.socket.on('end', this.updateState);
     this.socket.on('ask', this.ask);
+    this.socket.on('add', this.add);
+    this.socket.on('vote', this.vote);
     this.socket.on('results', this.updateResults);
   },
 
@@ -86,9 +91,23 @@ var App = React.createClass({
       result: {a:0, b:0, c:0, d:0}
      });
   },
+  
+  vote(sites) {
+    sessionStorage.answer = '',
+    this.setState({
+      currentSite: sites.intergration,
+      voteResult: {1:0, 2:0, 3:0, 4:0, 5:0}
+     });
+  },
 
   updateResults(data) {
     this.setState({ results: data });
+  },
+  
+  add(link) {
+    sessionStorage.links = link;
+    this.setState({ websiteLinks : link });
+    // console.log(websiteLinks);
   },
 
 
@@ -104,5 +123,3 @@ var App = React.createClass({
 
 module.exports = App;
 
-
-//

@@ -1,11 +1,12 @@
 {
   "name": "lyndareact",
   "version": "0.0.1",
-  "description": "ERROR: No README data found!",
+  "description": "A polling app",
   "main": "app-server.js",
   "scripts": {
-    "prestart": "webpack",
-    "start": "node app-server.js"
+    "prestart": "webpack --progress --colors",
+    "start": "node app-server.js && webpack --watch",
+    "poststart": "webpack --watch"
   },
   "author": "",
   "license": "MIT",

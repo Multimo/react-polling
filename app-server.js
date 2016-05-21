@@ -7,17 +7,26 @@ var title = 'Untitled Presentation';
 var audience = [];
 var speaker = {};
 var questions = require('./app-questions');
+var websiteLinks = [];
 var currentQuestion = false;
 var results = {
   a: 0,
   b: 0,
   c: 0
 };
+var currentSite = false;
+var voteResults = {
+  1: 0,
+  2: 0,
+  3: 0,
+  4: 0,
+  5: 0
+};
 
 app.use(express.static('./public'));
 app.use(express.static('./node_modules/bootstrap/dist'));
 
-var server = app.listen(3000);
+var server = app.listen(8081);
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket) {
@@ -69,11 +78,24 @@ io.sockets.on('connection', function(socket) {
     io.sockets.emit('ask', currentQuestion);
     console.log('Question asked: %s', question.q);
   });
+  
+    socket.on('vote', function(site) {
+    currentSite = site;
+    voteResults = { 1:0, 2:0, 3:0, 4:0, 5:0 };
+    io.sockets.emit('vote', currentSite);
+    console.log('Voting on: %s', site.intergration);
+  });
 
   socket.on('answer', function(payload) {
     results[payload.choice]++;
     io.sockets.emit('results', results);
     console.log('Answer: %s - %j', payload.choice, results);
+  });
+
+  socket.on('add', function(link) {
+    websiteLinks.push(link);
+    io.sockets.emit('add', websiteLinks);
+    console.log('Website added asked: %s', websiteLinks);
   });
 
   socket.emit('welcome', {
@@ -85,6 +107,8 @@ io.sockets.on('connection', function(socket) {
     results: results
   });
 
+
+  
   connections.push(socket);
   console.log('Connected: %s sockets', connections.length );
 });

@@ -2,6 +2,7 @@ import React from 'react'
 import Display from './parts/Display'
 import Join from './parts/Join'
 import Ask from './parts/Ask'
+import ShowLinks from './parts/ShowLinks'
 
 
 var Audience = React.createClass({
@@ -18,10 +19,13 @@ var Audience = React.createClass({
             </Display>
 
             <Display if={this.props.currentQuestion}>
-
               <Ask question={this.props.currentQuestion}  emit={this.props.emit}  />
             </Display>
-
+            
+            <Display if={this.props.websiteLinks}>
+              <ShowLinks sites={this.props.websiteLinks} />
+            </Display>
+            
 
           </Display>
 
