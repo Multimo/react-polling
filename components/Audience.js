@@ -11,22 +11,19 @@ var Audience = React.createClass({
       <Display if={this.props.status === 'connected'}>
 
           <Display if={this.props.member.name}>
-
-            <Display if={!this.props.currentQuestion}>
-              <h2>Welcome {this.props.member.name}</h2>
-              <p>{this.props.audience.length} audience members</p>
-              <p>Questions Will Appear Here.</p>
-            </Display>
-
-            <Display if={this.props.currentQuestion}>
-              <Ask question={this.props.currentQuestion}  emit={this.props.emit}  />
-            </Display>
-            
-            <Display if={this.props.websiteLinks}>
-              <ShowLinks sites={this.props.websiteLinks} />
-            </Display>
-            
-
+              <Display if={!this.props.currentQuestion}>
+                <h2>Welcome {this.props.member.name}</h2>
+                <p>{this.props.audience.length} audience members</p>
+                <p>Questions Will Appear Here.</p>
+              </Display>
+  
+              <Display if={this.props.currentQuestion}>
+                <Ask question={this.props.currentQuestion}  emit={this.props.emit}  />
+              </Display>
+              
+              <Display if={this.props.websiteLinks}>
+                <ShowLinks sites={this.props.websiteLinks} emit={this.props.emit} />
+              </Display>
           </Display>
 
           <Display if={!this.props.member.name}>

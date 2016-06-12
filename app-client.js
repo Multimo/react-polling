@@ -6,14 +6,14 @@ import Speaker from './components/Speaker'
 import Board from './components/Board'
 import Whoops404 from './components/Whoops404'
 
-import { Router, Route, Link, IndexRoute, NotFoundRoute, browserHistory } from 'react-router'
+import { Router, Route, Link, IndexRoute, NotFoundRoute, browserHistory, hashHistory } from 'react-router'
 
 
 
 
 
 ReactDom.render((
-    <Router history={browserHistory}>
+    <Router history={hashHistory}>
         <Route path="/" component={App}>
 
         <IndexRoute component={Audience}/>

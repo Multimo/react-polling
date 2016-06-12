@@ -1,75 +1,38 @@
-import React from 'react'
-import Display from './Display'
+var React = require('react');
+// var ReactDOM = require('react-dom');
 
-var Review = React.createClass({
+var Classnames = require('classnames');
 
-  getInitialState() {
-    return {
-      choice: [],
-      answer: undefined
-    }
-  },
+var review = React.createClass({
+  
+  _handleVote(e, i) {
 
-  componentWillMount() {
-    this.setUpChoices();
-  },
-
-  componentWillReceiveProps() {
-    this.setUpChoices();
-  },
-
-  setUpChoices() {
-    var choices = Object.keys(this.props.question);
-    choices.shift();
-    this.setState({
-      choices: choices,
-      answer: sessionStorage.answer
-     });
-  },
-
-  select(choice) {
-    this.setState({ answer: choice });
-    console.log(this.props.question);
-    sessionStorage.answer = choice;
-    this.props.emit('answer', {
-      question: this.props.questions,
-      choice: choice
+    
+    var key = e.dispatchMarker.split('');
+    var x = key.indexOf('$');
+    var site = key[x+1];
+    var votes = key.pop();
+    
+    console.log("site = %s, vote = %s", site, votes);
+    this.props.emit('vote', { 
+      site: site, 
+      vote: votes, 
     });
+    
   },
 
-  addChoiceButton(choice, i) {
-
-    var buttonTypes = ['primary', 'success', 'warning', 'danger']
-
-    return(
-      <button key={i}
-        onClick={this.select.bind(null, choice)}
-        className={"col-xs-12 col-sm-6 btn btn-" + buttonTypes[i]} >
-        {choice}: {this.props.question[choice]}
-      </button>
-    )
-  },
 
   render() {
-      return (
-        <div id="currentQuestion" >
-
-          <Display if={this.state.answer}>
-            <h3>You Answered: {this.state.answer}</h3>
-            <p>{this.props.question[this.state.answer]}</p>
-          </Display>
-
-          <Display if={!this.state.answer}>
-            <h2>{this.props.question.q}</h2>
-            <div className="row">
-              {this.state.choices.map(this.addChoiceButton)}
-            </div>
-          </Display>
-
-
-        </div>
-      );
+    var btnClass = 'list-group-item';
+   
+    
+    return (
+        <li className={btnClass}  onClick={this._handleVote}> 
+            {this.props.sites}
+        </li>
+    );
   }
+
 });
 
-module.exports = Review;
+module.exports = review;

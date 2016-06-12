@@ -15,13 +15,7 @@ var results = {
   c: 0
 };
 var currentSite = false;
-var voteResults = {
-  1: 0,
-  2: 0,
-  3: 0,
-  4: 0,
-  5: 0
-};
+
 
 app.use(express.static('./public'));
 app.use(express.static('./node_modules/bootstrap/dist'));
@@ -78,13 +72,6 @@ io.sockets.on('connection', function(socket) {
     io.sockets.emit('ask', currentQuestion);
     console.log('Question asked: %s', question.q);
   });
-  
-    socket.on('vote', function(site) {
-    currentSite = site;
-    voteResults = { 1:0, 2:0, 3:0, 4:0, 5:0 };
-    io.sockets.emit('vote', currentSite);
-    console.log('Voting on: %s', site.intergration);
-  });
 
   socket.on('answer', function(payload) {
     results[payload.choice]++;
@@ -94,8 +81,14 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('add', function(link) {
     websiteLinks.push(link);
+    console.log(websiteLinks);
     io.sockets.emit('add', websiteLinks);
-    console.log('Website added asked: %s', websiteLinks);
+    console.log('Website added: %s', link.intergration);
+  });
+  
+  socket.on('vote', function(vote) {
+    websiteLinks[vote.site].votes[vote.vote]++
+    io.sockets.emit('vote', websiteLinks);
   });
 
   socket.emit('welcome', {
@@ -104,7 +97,8 @@ io.sockets.on('connection', function(socket) {
     speaker: speaker.name,
     currentQuestion: currentQuestion,
     questions: questions,
-    results: results
+    results: results,
+    websiteLinks: websiteLinks,
   });
 
 

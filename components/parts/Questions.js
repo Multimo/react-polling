@@ -9,7 +9,6 @@ var Questions = React.createClass({
     return(
       <div key={i} className="col-xs-12 col-sm-6 col-md-3" onClick={this.ask.bind(null, question)}>
         <span >{question.q}</span>
-
       </div>
     );
   },

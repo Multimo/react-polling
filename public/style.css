@@ -32,3 +32,6 @@ margin: 10px;
   background: yellow;
 
 }
+.btn-pressed {
+  display: none;
+}

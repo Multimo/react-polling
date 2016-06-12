@@ -19,8 +19,7 @@ var App = React.createClass({
       currentQuestion: false,
       results: {},
       currentSite: false,
-      voteResults: {},
-      websiteLinks: []
+      voteResults: {}
     }
   },
 
@@ -51,7 +50,6 @@ var App = React.createClass({
     } else if (member && member.type === 'speaker') {
       this.emit('start', { name: member.name, title: sessionStorage.title })
     }
-
     this.setState({ status: 'connected' });
   },
 
@@ -92,31 +90,28 @@ var App = React.createClass({
      });
   },
   
-  vote(sites) {
-    sessionStorage.answer = '',
-    this.setState({
-      currentSite: sites.intergration,
-      voteResult: {1:0, 2:0, 3:0, 4:0, 5:0}
-     });
+  vote(data) {
+    this.setState({ websiteLinks : data });
   },
+  
+    add(link) {
+    this.setState({ websiteLinks : link });
+  },
+
 
   updateResults(data) {
     this.setState({ results: data });
   },
   
-  add(link) {
-    sessionStorage.links = link;
-    this.setState({ websiteLinks : link });
-    // console.log(websiteLinks);
-  },
 
 
   render() {
     return (
-      <div >
+      <div>
         <Header {...this.state} />
           {React.cloneElement(this.props.children, this.state)}
       </div>
+      
     );
   }
 });

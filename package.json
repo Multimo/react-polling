@@ -4,7 +4,7 @@
   "description": "A polling app",
   "main": "app-server.js",
   "scripts": {
-    "prestart": "webpack --progress --colors",
+    "prestart": "webpack --progress --colors --watch",
     "start": "node app-server.js && webpack --watch",
     "poststart": "webpack --watch"
   },

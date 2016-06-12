@@ -15,9 +15,15 @@ class Speaker extends React.Component {
         <Display if={this.props.status === 'connected'}>
 
           <Display if={this.props.member.name && this.props.member.type === 'speaker'}>
-            <Questions questions={this.props.questions} emit={this.props.emit} />
           
             <Attendance audience={this.props.audience} />
+        
+            <AddLinks emit={this.props.emit} />
+                
+              <Display if={this.props.websiteLinks}>
+                    <ShowLinks sites={this.props.websiteLinks} emit={this.props.emit}  />
+              </Display>
+        
           </Display>
 
           <Display if={!this.props.member.name}>
@@ -26,10 +32,8 @@ class Speaker extends React.Component {
           </Display>
 
         </Display>
-        <AddLinks emit={this.props.emit} />
-        <Display if={this.props.websiteLinks}>
-        <ShowLinks sites={this.props.websiteLinks} />
-        </Display>
+        
+        
       </div>
     );
   }
