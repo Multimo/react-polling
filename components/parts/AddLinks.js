@@ -10,7 +10,7 @@ var AddLinks = React.createClass({
     this.props.emit('add', { 
       template: template, 
       intergration: intergration, 
-      votes: [0, 0, 0, 0, 0] 
+      votes: [0, 0, 0, 0, 0, 0] 
     });
     ReactDOM.findDOMNode(this.refs.template).value = "";
     ReactDOM.findDOMNode(this.refs.intergration).value = "";

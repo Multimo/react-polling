@@ -6,35 +6,27 @@ import {BarChart} from 'react-easy-chart';
 class Board extends React.Component {
 
 
-  barGraphdata(results) {
-     return Object.keys(results).map(function(choice){
+  barGraphdata(sites) {
+    console.log(sites)
+     return sites.map(function(site){
       return {
-          'x': choice,
-          'y': results[choice]
-        }
+          'x': site.template,
+          'y': site.votes
+      }
     });
   }
 
   render() {
     return (
       <div id="scoreboard">
-
-        <Display if={this.props.status === 'connected' && this.props.currentQuestion}>
           <BarChart
                     axes={true}
                     colorBars
-                    data={this.barGraphdata(this.props.results)}
+                    data={this.barGraphdata(this.props)}
                     height={500}
                     width={600}
 
             />
-        </Display>
-
-        <Display if={this.props.status === 'connected' && !this.props.currentQuestion}>
-          <h3>Awaiting Question...</h3>
-        </Display>
-
-
       </div>
     );
   }
