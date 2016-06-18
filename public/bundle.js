@@ -33297,7 +33297,8 @@
 	    this.props.emit('add', {
 	      template: template,
 	      intergration: intergration,
-	      votes: [0, 0, 0, 0, 0, 0]
+	      votes: [0, 0, 0, 0, 0, 0],
+	      totalVotes: [0]
 	    });
 	    ReactDOM.findDOMNode(this.refs.template).value = "";
 	    ReactDOM.findDOMNode(this.refs.intergration).value = "";
@@ -33367,13 +33368,13 @@
 	  }
 
 	  _createClass(Board, [{
-	    key: 'barGraphdata',
-	    value: function barGraphdata(sites) {
-	      console.log(sites);
+	    key: '_barGraphdata',
+	    value: function _barGraphdata(sites) {
 	      return sites.map(function (site) {
+
 	        return {
 	          'x': site.template,
-	          'y': site.votes
+	          'y': site.totalVotes
 	        };
 	      });
 	    }
@@ -33383,14 +33384,28 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'scoreboard' },
-	        _react2.default.createElement(_reactEasyChart.BarChart, {
-	          axes: true,
-	          colorBars: true,
-	          data: this.barGraphdata(this.props),
-	          height: 500,
-	          width: 600
+	        _react2.default.createElement(
+	          _Display2.default,
+	          { 'if': !this.props.websiteLinks },
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Hai'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          _Display2.default,
+	          { 'if': this.props.websiteLinks != undefined },
+	          console.log(this.props.websiteLinks),
+	          _react2.default.createElement(_reactEasyChart.BarChart, {
+	            axes: true,
+	            colorBars: true,
+	            data: this._barGraphdata(this.props.websiteLinks),
+	            height: 500,
+	            width: 600
 
-	        })
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -33399,8 +33414,6 @@
 	}(_react2.default.Component);
 
 	module.exports = Board;
-
-	// /
 
 /***/ },
 /* 283 */

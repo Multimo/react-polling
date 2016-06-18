@@ -6,27 +6,41 @@ import {BarChart} from 'react-easy-chart';
 class Board extends React.Component {
 
 
-  barGraphdata(sites) {
-    console.log(sites)
-     return sites.map(function(site){
+  _barGraphdata(sites) {
+    return sites.map(function(site){
+
+      
       return {
           'x': site.template,
-          'y': site.votes
+          'y': site.totalVotes
       }
     });
   }
 
+
+    
+
+
   render() {
     return (
       <div id="scoreboard">
-          <BarChart
+      
+          <Display if={!this.props.websiteLinks}>
+          <h1>Hai</h1>
+          </Display>
+          
+          <Display if={this.props.websiteLinks != undefined}>
+            {console.log(this.props.websiteLinks)}
+            <BarChart
                     axes={true}
                     colorBars
-                    data={this.barGraphdata(this.props)}
+                    data={this._barGraphdata(this.props.websiteLinks)}
                     height={500}
                     width={600}
+    
+            />        
+          </Display>
 
-            />
       </div>
     );
   }
@@ -35,4 +49,4 @@ class Board extends React.Component {
 
 module.exports = Board;
 
-// /
+

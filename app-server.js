@@ -88,6 +88,7 @@ io.sockets.on('connection', function(socket) {
   
   socket.on('vote', function(vote) {
     websiteLinks[vote.site].votes[vote.vote]++
+    websiteLinks[vote.site].totalVotes = parseInt(websiteLinks[vote.site].totalVotes) + parseInt(vote.vote);
     io.sockets.emit('vote', websiteLinks);
   });
 
