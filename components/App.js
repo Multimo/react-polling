@@ -19,7 +19,7 @@ var App = React.createClass({
       currentQuestion: false,
       results: {},
       currentSite: false,
-      voteResults: {}
+      websiteLinks: []
     }
   },
 

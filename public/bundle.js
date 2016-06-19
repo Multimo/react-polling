@@ -19721,7 +19721,7 @@
 	      currentQuestion: false,
 	      results: {},
 	      currentSite: false,
-	      voteResults: {}
+	      websiteLinks: []
 	    };
 	  },
 	  componentWillMount: function componentWillMount() {
@@ -33371,7 +33371,6 @@
 	    key: '_barGraphdata',
 	    value: function _barGraphdata(sites) {
 	      return sites.map(function (site) {
-
 	        return {
 	          'x': site.template,
 	          'y': site.totalVotes
@@ -33384,9 +33383,10 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'scoreboard' },
+	        console.log(this.props),
 	        _react2.default.createElement(
 	          _Display2.default,
-	          { 'if': !this.props.websiteLinks },
+	          { 'if': this.props.websiteLinks.length <= 0 },
 	          _react2.default.createElement(
 	            'h1',
 	            null,
@@ -33395,16 +33395,13 @@
 	        ),
 	        _react2.default.createElement(
 	          _Display2.default,
-	          { 'if': this.props.websiteLinks != undefined },
-	          console.log(this.props.websiteLinks),
+	          { 'if': this.props.websiteLinks.length >= 1 },
 	          _react2.default.createElement(_reactEasyChart.BarChart, {
 	            axes: true,
 	            colorBars: true,
 	            data: this._barGraphdata(this.props.websiteLinks),
 	            height: 500,
-	            width: 600
-
-	          })
+	            width: 600 })
 	        )
 	      );
 	    }

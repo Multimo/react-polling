@@ -8,8 +8,6 @@ class Board extends React.Component {
 
   _barGraphdata(sites) {
     return sites.map(function(site){
-
-      
       return {
           'x': site.template,
           'y': site.totalVotes
@@ -24,21 +22,20 @@ class Board extends React.Component {
   render() {
     return (
       <div id="scoreboard">
+            {console.log(this.props)}
       
-          <Display if={!this.props.websiteLinks}>
+          <Display if={this.props.websiteLinks.length <= 0 }>
           <h1>Hai</h1>
           </Display>
           
-          <Display if={this.props.websiteLinks != undefined}>
-            {console.log(this.props.websiteLinks)}
+          <Display if={this.props.websiteLinks.length >= 1 }>
             <BarChart
                     axes={true}
                     colorBars
                     data={this._barGraphdata(this.props.websiteLinks)}
                     height={500}
-                    width={600}
-    
-            />        
+                    width={600} > 
+            </BarChart>
           </Display>
 
       </div>
